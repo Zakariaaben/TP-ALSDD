@@ -7,20 +7,21 @@ int main(){
     NodeVehicle *listVehicle = NULL;
 
     loadVehicleListFromfile(&listVehicle, "./Vehicles.txt");
+
+    
     printVehicleList(listVehicle);
     printf("\n\n");
 
-    queue MotoQ, VanQ;
-    createQueuesFromList(listVehicle, &MotoQ, &VanQ);
+    int id;
+    printf("\n Enter  the ID of a vehicle to delete it: ");
+    scanf("%d", &id);
 
-    printVehicleList(MotoQ.head);
-    printf("\n\n");
-    printVehicleList(VanQ.head);
-    printf("\n\n");
-    Vehicle vehicle = {.ID = 15, .Type = 'V', .capacity = 12345 };
-    addVehicleAndUpdateQueue(&listVehicle,vehicle,&MotoQ,&VanQ);
-    printVehicleList(MotoQ.head);
-    printf("\n\n");
-    printVehicleList(VanQ.head);
+    if (deleteVehicleByID(&listVehicle, id) == 0){
+        printVehicleList(listVehicle);
+    }else{
+        printf("This ID doesn't exist");
+    }
+
+    
     return 0;
 }

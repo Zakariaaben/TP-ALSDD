@@ -26,16 +26,21 @@ typedef struct NodeItem{ // Node of a  linked list containing Item data type
 
 typedef struct NodeVehicle{ // Node of a linked list containing Vehicle data type
     Vehicle Vehicle;
-    int itemsCarried;
-    int wilayaOfDeliver;
     struct NodeVehicle *link;
 } NodeVehicle;
 
 
+typedef struct NodeQueue{
+    Vehicle Vehicle;
+    NodeItem *head;
+    struct NodeQueue * next;
+}NodeQueue;
+
+
 
 typedef struct queue{
-    NodeVehicle *head;
-    NodeVehicle *tail;
+    NodeQueue *head;
+    NodeQueue *tail;
 }queue;
 
 

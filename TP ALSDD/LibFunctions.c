@@ -1,24 +1,7 @@
+#include "LibFunctions.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include "LibStructures.c"
-
-void allocateItem(NodeItem **);
-NodeItem *nextItem(NodeItem *);
-void ass_adrItem(NodeItem *, NodeItem *);
-void ass_valItem(NodeItem *, Item);
-Item valueItem(NodeItem *);
-void addNewItem(NodeItem **, Item);
-void printItemList(NodeItem *);
-void loadItemListFromfile(NodeItem **, char *);
-void allocateVehicle(NodeVehicle **);
-NodeVehicle *nextVehicle(NodeVehicle *);
-void ass_adrVehicle(NodeVehicle *, NodeVehicle *);
-void ass_valVehicle(NodeVehicle *, Vehicle);
-Vehicle valueVehicle(NodeVehicle *);
-void printVehicleList(NodeVehicle *);
-void loadVehicleListFromfile(NodeVehicle **, char *);
-void createQueuesFromList(NodeVehicle *, queue *, queue *);
-
 
 
 
@@ -104,6 +87,21 @@ void printItemList(NodeItem *head)
 }
 
 
+int lengthofItemList(NodeItem * head){
+    if (head==NULL){
+        return 0 ;
+    }else{
+        NodeItem * p  = head;
+        int counter = 0;
+        while (p != NULL){
+            p = nextItem( p );
+            counter++ ;
+        }
+        return counter;
+    }
+}
+
+
 void loadItemListFromfile(NodeItem **head, char *filename)
 {
     char line[100]; // ceci contiendra chaque ligne
@@ -112,7 +110,7 @@ void loadItemListFromfile(NodeItem **head, char *filename)
     file  = fopen(filename,"a+"); // opening of the file
     Item Item;
     
-    while (fgets(line, sizeof(line), file) != NULL) // READS EACH LINE OF THE FILE
+    while(fgets(line, sizeof(line), file) != NULL) // READS EACH LINE OF THE FILE
     {
         if (sscanf(line, READ_FORMAT_ITEM, &(Item.ID), (Item.Date), &(Item.wilaya), &(Item.weight), &(Item.Status))==5) // TAKES  THE DATA FROM A LINE AND PUT IT IN LIST
         {   
@@ -123,6 +121,10 @@ void loadItemListFromfile(NodeItem **head, char *filename)
 }
 
 //----------------------------------------------------- END PART FUNCTIONS OF ITEMS ----------------------------
+
+
+
+
 
 //---------------------------------------------------- PART FUNCTINOS OF VEHICLE -------------------------------
 
@@ -179,6 +181,45 @@ void addNewVehicle(NodeVehicle **head, Vehicle Vehicle)
         
 }
 
+int deleteVehicleByID(NodeVehicle **head,int ID){
+    if (*head == NULL)
+    {
+        printf("The list is already empty.\n");
+        return 1;
+    }else{
+        NodeVehicle * p = *head,*q;
+        while (p!=NULL )
+        {
+            if(valueVehicle(p).ID != ID){
+            q=p;
+            p=nextVehicle(p);
+            }else if(valueVehicle(p).ID == ID){
+                break;
+            }
+        }
+        if (p==NULL) return 1;
+
+        if (p == *head)
+        {
+            q = *head ;
+            free(q);
+            *head  = nextVehicle(*head);
+            
+        }
+        else{
+            ass_adrVehicle(q,nextVehicle(p));
+            free(p);
+        }
+        printf("Vehicle Deleted");
+        return 0;
+        
+
+
+        
+    }
+}
+
+
 void printVehicleList(NodeVehicle *head)
 {
     if (head == NULL)
@@ -227,7 +268,112 @@ void loadVehicleListFromfile(NodeVehicle **head, char *filename)
 
 
 
+
+
+
+
+// -B-------------------------------------------------  MACHINE ABSTRAITE QUEUES de Vehicules -----------------------------//
+
+
+void allocateVQueue(NodeQueue **p) // alloue un espace memoire pour un noeud de la queue
+{
+    *p = malloc(sizeof(NodeQueue));
+}
+
+NodeQueue *nextVQueue(NodeQueue *p) // renvoie l'adresse du prochain maillon de la queue
+{
+    return p->next;
+}
+
+void ass_adrVQueue(NodeQueue *p, NodeQueue *q) 
+{
+    p->next = q;
+}
+
+void ass_valVQueue(NodeQueue *p, Vehicle Vehicle)
+{
+    p->Vehicle = Vehicle;
+}
+
+Vehicle valueVQueue(NodeQueue *p) // renvoie la valeur du vehicule du maillon
+{
+    return p->Vehicle;
+}
+   
+
+// -E--------------------------------------------------- FIN MACHINE ABSTRAITE QUEUES --------------------------//
+
+
+
+
+
 // ---------------------------------- LOAD MOTO/VAN QUEUE FROM VEHICLE LIST ---------------------------------
+
+
+void enqueueVehicle(queue * queue, Vehicle Vehicle){
+    NodeQueue  * newNode ;
+    allocateVQueue(&newNode);
+    ass_valVQueue(newNode, Vehicle);
+    ass_adrVQueue(newNode, NULL);
+    (*newNode).next= NULL;
+
+    if ((*queue).head == NULL){
+        (*queue).head = (*queue).tail = newNode;
+    }
+
+    else {
+        ass_adrVQueue( (*queue).tail , newNode );
+        (*queue).tail = newNode;
+    }
+
+
+}
+
+int dequeueVehicle(queue * queue, Vehicle * Vehicle){
+    if ((*queue).head == NULL)
+    {
+       return 1; // RETURN ERROR IF THE QUEUE IS EMPTY
+    }else if ((*queue).tail == (*queue).head) {
+        *Vehicle = valueVQueue((*queue).head);
+        free((*queue).head);
+        (*queue).head = NULL;
+        (*queue).tail = NULL;
+        return 0; // RETURN SUCCESS
+    }
+    
+    else{
+        *Vehicle = valueVQueue((*queue).head);
+        NodeQueue * temp = (*queue).head;
+        (*queue).head = nextVQueue((*queue).head);
+        free(temp);
+        return 0; // RETURN SUCCESS
+    }
+}
+
+
+void printVehicleQueue(queue queue)
+{
+    if (queue.head == NULL)
+    {
+        printf("\n\t/* La Queue de ces vehicule est vide */\n");
+    }
+    else
+    {
+        NodeQueue *p = queue.head;
+        int maillon = 1;
+        while (p != NULL)
+        {
+            Vehicle tempVehicle = valueVQueue(p);
+            printf("  Vehicle %d :\n", maillon);
+            printf("\t- Type: %c\n", tempVehicle.Type);
+            printf("\t- ID: %d\n", tempVehicle.ID);
+            printf("\t- Wilaya: %d\n", tempVehicle.capacity);
+            p = p->next;
+            maillon++;
+        }
+    }
+}
+
 
 
 void createQueuesFromList(NodeVehicle *headList, queue * MotoQ, queue * VanQ){
@@ -235,39 +381,21 @@ void createQueuesFromList(NodeVehicle *headList, queue * MotoQ, queue * VanQ){
     NodeVehicle *pList = headList;
     (*MotoQ).head =(*MotoQ).tail = (*VanQ).head = (*VanQ).tail =  NULL;
     
-    NodeVehicle * tailMoto=NULL , *tailVan =NULL;
+    NodeQueue * tailMoto=NULL , *tailVan =NULL;
 
     while (pList!=NULL)     // CREATING THE QUEUES
     {
         if (valueVehicle(pList).Type=='V'){
 
-            addNewVehicle(&(*VanQ).head ,valueVehicle(pList));
-
-            if (tailVan == NULL)
-            {
-               tailVan= (*VanQ).head;
-            }else if (nextVehicle(tailVan)!=NULL){
-                tailVan = nextVehicle(tailVan);
-            }
+            enqueueVehicle(VanQ, valueVehicle(pList));
             
         }else if (valueVehicle(pList).Type == 'M'){
 
-            addNewVehicle(&(*MotoQ).head ,valueVehicle(pList));
-
-            if (tailMoto == NULL)
-            {
-               tailMoto= (*MotoQ).head;
-            }else if (nextVehicle(tailMoto)!=NULL){
-                tailMoto = nextVehicle(tailMoto);
-            }
-
+           enqueueVehicle(MotoQ, valueVehicle(pList)) ;
         }
         pList=nextVehicle(pList);
     }
 
-    // INITIALIZING THE TAIL
-    (*MotoQ).tail = tailMoto ;
-    (*VanQ).tail = tailVan  ;
 
 }
 
@@ -275,21 +403,18 @@ void createQueuesFromList(NodeVehicle *headList, queue * MotoQ, queue * VanQ){
 
 void addVehicleAndUpdateQueue(NodeVehicle ** head,Vehicle vehicle,queue* MotoQ,queue* VanQ){
     addNewVehicle(head,vehicle);
-    NodeVehicle * p;
-    allocateVehicle(&p);
-    ass_valVehicle(p,vehicle);
-    ass_adrVehicle(p,NULL);
-    if (vehicle.Type == 'M')
-    {
-        ass_adrVehicle((*MotoQ).tail, p);
-        (*MotoQ).tail = p;
-    }else if (vehicle.Type == 'V' ){
-        ass_adrVehicle((*VanQ).tail, p);
-        (*VanQ).tail = p;
+    if (vehicle.Type=='M'){
+       enqueueVehicle(MotoQ,vehicle);
+    }else if (vehicle.Type=='V'){
+        enqueueVehicle(VanQ,vehicle);
     }
+    
 }
 
 //--------------------------------- END OF FUNCTION LOADING QUEUE ---------------------------------------------
+
+
+
 
 
 
