@@ -1,14 +1,13 @@
 #ifndef LIBFUNCTIONS_H
 #define LIBFUNCTIONS_H
 
-#include "LibStructures.c"
-
 void allocateItem(NodeItem **);
 NodeItem *nextItem(NodeItem *);
 void ass_adrItem(NodeItem *, NodeItem *);
 void ass_valItem(NodeItem *, Item);
 Item valueItem(NodeItem *);
 void addNewItem(NodeItem **, Item);
+void printItem(Item);
 void printItemList(NodeItem *);
 int lengthofItemList(NodeItem *);
 void loadItemListFromfile(NodeItem **, char *);
@@ -31,5 +30,9 @@ int dequeueVehicle(queue *, Vehicle *);
 void printVehicleQueue(queue);
 void createQueuesFromList(NodeVehicle *, queue *, queue *);
 void addVehicleAndUpdateQueue(NodeVehicle **, Vehicle, queue *, queue *);
+int min_date(char *, char *);
+NodeItem *priorItem(NodeItem *);
+
+// void assignItemsToVehicleQueue(NodeItem *, queue, queue);
 
 #endif //LIBFUNCTIONS_H

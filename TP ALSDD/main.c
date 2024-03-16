@@ -4,24 +4,25 @@
 
 
 int main(){
-    NodeVehicle *listVehicle = NULL;
+    int index;
+    NodeItem  * head = NULL;
+    loadItemListFromfile(&head,"./items.txt");
+    NodeItem * next;
+    
+    printItemList(head);
 
-    loadVehicleListFromfile(&listVehicle, "./Vehicles.txt");
+    NodeItem * p = priorItem(head);
+    printItem(valueItem(p));
+
+    p = priorItem(head);
+    printItem(valueItem(p));
+
+     p = priorItem(head);
+    printItem(valueItem(p));
+    printf("hola");
+
 
     
-    printVehicleList(listVehicle);
-    printf("\n\n");
 
-    int id;
-    printf("\n Enter  the ID of a vehicle to delete it: ");
-    scanf("%d", &id);
 
-    if (deleteVehicleByID(&listVehicle, id) == 0){
-        printVehicleList(listVehicle);
-    }else{
-        printf("This ID doesn't exist");
-    }
-
-    
-    return 0;
 }
