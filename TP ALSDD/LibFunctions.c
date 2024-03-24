@@ -34,6 +34,12 @@ Item valueItem(NodeItem *p)
     return p->Item;
 }
 
+void createItem(Item * item){
+    printf("Insert the Item ID: ");
+    scanf("%d",&(*item).ID);
+    // to finish
+}
+
 void addNewItem(NodeItem **head, Item Item)
 {
     if (*head == NULL)
@@ -59,14 +65,17 @@ void addNewItem(NodeItem **head, Item Item)
     }
 }
 
+
 void printItem(Item item){
-        printf("Your Item : \n");
-           printf("\t- ID: %d\n", item.ID);
-            printf("\t- Date: %s\n", item.Date);
-            printf("\t- Wilaya: %d\n", item.wilaya);
-            printf("\t- Weight: %d\n", item.weight);
-            printf("\t- Status: %c\n", item.Status);
+            printf("\t\t\t- ID: %d\n", item.ID);
+            printf("\t\t\t- Date: %s\n", item.Date);
+            printf("\t\t\t- Wilaya: %d\n", item.wilaya);
+            printf("\t\t\t- Weight: %d\n", item.weight);
+            printf("\t\t\t- Status: %c\n", item.Status);
+            
 }
+
+
 
 void printItemList(NodeItem *head)
 {
@@ -81,17 +90,58 @@ void printItemList(NodeItem *head)
         while (p != NULL)
         {
             Item tempItem = valueItem(p);
-            printf("  Item %d :\n", maillon);
-            printf("\t- ID: %d\n", tempItem.ID);
-            printf("\t- Date: %s\n", tempItem.Date);
-            printf("\t- Wilaya: %d\n", tempItem.wilaya);
-            printf("\t- Weight: %d\n", tempItem.weight);
-            printf("\t- Status: %c\n", tempItem.Status);
+            printf("\t\tItem %d :\n", maillon);
+            printItem(tempItem);
+            printf("\n");
             p = nextItem(p);
             maillon++;
         }
     }
 }
+
+
+
+int deleteItemByID(NodeItem **head, int ID)
+{
+    if (*head == NULL)
+    {
+        printf("The Item list is already empty.\n");
+        return 1;
+    }
+    else
+    {
+        NodeItem *p = *head, *q;
+        while (p != NULL)
+        {
+            if (valueItem(p).ID != ID)
+            {
+                q = p;
+                p = nextItem(p);
+            }
+            else if (valueItem(p).ID == ID)
+            {
+                break;
+            }
+        }
+        if (p == NULL)
+            return 1;
+
+        if (p == *head)
+        {
+            q = *head;
+            free(q);
+            *head = nextItem(*head);
+        }
+        else
+        {
+            ass_adrItem(q, nextItem(p));
+            free(p);
+        }
+        printf("\nItem Deleted from the list successfully ! ");
+        return 0;
+    }
+}
+
 
 int lengthofItemList(NodeItem *head)
 {
@@ -115,6 +165,7 @@ int lengthofItemList(NodeItem *head)
 
 void loadItemListFromfile(NodeItem **head, char *filename)
 {
+    *head = NULL;
     char line[100]; // ceci contiendra chaque ligne
     FILE * file;
     
@@ -162,6 +213,11 @@ void ass_valVehicle(NodeVehicle *p, Vehicle Vehicle)
 Vehicle valueVehicle(NodeVehicle *p)
 {
     return p->Vehicle;
+}
+
+void createVehicle(Vehicle * vehicle){
+    printf("Give the type of the Vehicle (M for Moto and V for Van) :  ");
+    scanf("%c", &(*vehicle).Type);
 }
 
 void addNewVehicle(NodeVehicle **head, Vehicle Vehicle)
@@ -257,7 +313,7 @@ void loadVehicleListFromfile(NodeVehicle **head, char *filename)
 {
     char line[100]; // ceci contiendra chaque ligne
     FILE *file;
-
+    *head = NULL;
     file = fopen(filename, "a+"); // opening of the file
     Vehicle Vehicle;
 
@@ -304,12 +360,13 @@ Vehicle valueVQueue(NodeQueue *p) // renvoie la valeur du vehicule du maillon
 
 // ---------------------------------- LOAD MOTO/VAN QUEUE FROM VEHICLE LIST ---------------------------------
 
-void enqueueVehicle(queue *queue, Vehicle Vehicle)
+NodeQueue * enqueueVehicle(queue *queue, Vehicle Vehicle)
 {
     NodeQueue *newNode;
     allocateVQueue(&newNode);
     ass_valVQueue(newNode, Vehicle);
     ass_adrVQueue(newNode, NULL);
+    (*newNode).head = NULL;
     (*newNode).next = NULL;
 
     if ((*queue).head == NULL)
@@ -322,6 +379,7 @@ void enqueueVehicle(queue *queue, Vehicle Vehicle)
         ass_adrVQueue((*queue).tail, newNode);
         (*queue).tail = newNode;
     }
+    return newNode;
 }
 
 int dequeueVehicle(queue *queue, Vehicle *Vehicle)
@@ -362,11 +420,17 @@ void printVehicleQueue(queue queue)
         while (p != NULL)
         {
             Vehicle tempVehicle = valueVQueue(p);
+            
             printf("  Vehicle %d :\n", maillon);
-            printf("\t- Type: %c\n", tempVehicle.Type);
             printf("\t- ID: %d\n", tempVehicle.ID);
-            printf("\t- Wilaya: %d\n", tempVehicle.capacity);
-            p = p->next;
+            printf("\t- Max capapcity: %d\n\n", tempVehicle.capacity);  
+
+            if (p->head != NULL)
+            {
+                printItemList(p->head);
+            }
+            printf("\n\n");  
+            p = nextVQueue(p);
             maillon++;
         }
     }
@@ -379,21 +443,24 @@ void createQueuesFromList(NodeVehicle *headList, queue *MotoQ, queue *VanQ)
     (*MotoQ).head = (*MotoQ).tail = (*VanQ).head = (*VanQ).tail = NULL;
 
     NodeQueue *tailMoto = NULL, *tailVan = NULL;
-
+    NodeQueue * NewNode;
     while (pList != NULL) // CREATING THE QUEUES
     {
         if (valueVehicle(pList).Type == 'V')
         {
-            enqueueVehicle(VanQ, valueVehicle(pList));
+            NewNode=enqueueVehicle(VanQ, valueVehicle(pList));
         }
         else if (valueVehicle(pList).Type == 'M')
         {
 
-            enqueueVehicle(MotoQ, valueVehicle(pList));
+            NewNode= enqueueVehicle(MotoQ, valueVehicle(pList));
         }
+        NewNode->Trips = 0;
         pList = nextVehicle(pList);
+        
     }
 }
+
 
 void addVehicleAndUpdateQueue(NodeVehicle **head, Vehicle vehicle, queue *MotoQ, queue *VanQ)
 {
@@ -455,43 +522,143 @@ NodeItem *priorItem(NodeItem *headlist) // Fetches the pointer of the item havin
     NodeItem *q=NULL;
     while (p != NULL)
     {
-        if( min_date(mindate, valueItem(p).Date) == 2 && valueItem(p).studied != 1){
+        if( min_date(mindate, valueItem(p).Date) == 2 && valueItem(p).studied == 0){
             q= p;
             mindate  = valueItem(p).Date;
         }
         p = nextItem(p);
     }
+
+    if (q != NULL){    // There is still an item that needs to be assigned 
     (*q).Item.studied = 1;
+    } // ELSE : ALL THE ITEMS HAVE BEEN STUDIED
+
     return q;
     
 }
 
-void addItemToVanQ(queue VanQ, NodeItem * Item){
-    
-}
 
 void assignItemsToVehicleQueue(NodeItem *headlist, queue MotoQ, queue VanQ)
 {
 
-    NodeItem * p = headlist;
-    NodeItem * currentItem;
+    NodeItem *currentItem = priorItem(headlist);
+    
+     while (currentItem != NULL)
+    {
+
+        if (valueItem(currentItem).weight > 3 || valueItem(currentItem).wilaya != 16) // CASE 01 : THE ITEM GOES TO VanQ
+        {
+            NodeQueue *pVanQ = VanQ.head;
+            while (pVanQ != NULL)
+            {
+                if (lengthofItemList(pVanQ->head) == 0 || (lengthofItemList(pVanQ->head) < valueVQueue(pVanQ).capacity && valueItem(pVanQ->head).wilaya == valueItem(currentItem).wilaya))
+                { // We assign it to the vehicle if the van is empty or if the current capacity is less then the max cap and that the item goes to the same wilaya
+                    (*currentItem).Item.Status = 'D'; // for delivered
+                    addNewItem(&pVanQ->head, valueItem(currentItem));
+                    pVanQ = NULL;
+                
+                }
+                else
+                {
+                    pVanQ = nextVQueue(pVanQ);
+                    
+                }
+                
+            }
+        }
+
+        else // CASE 02 : THE ITEM WEIGHS LESS THAN 3 AND GOES TO ALGIERS
+        {
+            NodeQueue *pMotoQ = MotoQ.head;
+            while (pMotoQ != NULL)
+            {
+                if (lengthofItemList(pMotoQ->head) < 2)
+                { // We assign it to the vehicle if the Moto is empty or if the current capacity is less then the max cap and that the item goes to the same wilaya
+                    (*currentItem).Item.Status = 'D'; // for delivered
+                    addNewItem(&pMotoQ->head, valueItem(currentItem));
+                    pMotoQ = NULL;
+
+                }
+                else
+                {
+                    pMotoQ = nextVQueue(pMotoQ);
+                }
+            }
+
+            if (valueItem(currentItem).Status == 'A') // IF THE ITEM CANNOT BE DELIVERED IN MOTO THEN WE TRY IN THE VanQ
+            {
+                NodeQueue *pVanQ = VanQ.head;
+                while (pVanQ != NULL)
+                {
+                    if (lengthofItemList(pVanQ->head) == 0 || (lengthofItemList(pVanQ->head) < valueVQueue(pVanQ).capacity && valueItem(pVanQ->head).wilaya == valueItem(currentItem).wilaya))
+                    { // We assign it to the vehicle if the van is empty or if the current capacity is less then the max cap and that the item goes to the same wilaya
+                        (*currentItem).Item.Status = 'D'; // for delivered
+                        addNewItem(&pVanQ->head, valueItem(currentItem));
+                        pVanQ = NULL;
+                    }
+                    else
+                    {
+                        pVanQ = nextVQueue(pVanQ);
+                    }
+                }
+            }
+        }
+        currentItem = priorItem(headlist); // WE STOP WHEN ALL THE  ITEMS HAVE BEEN PROCESSED
+    }
+    
+
+}
+
+
+int setReturn(NodeItem * headlist, int ID){ // set the item to Returned if we tried to deliver it but decided that it has been returned
+    NodeItem * pList = headlist;
+    while (pList != NULL )
+    {
+        if (valueItem(pList).ID == ID && valueItem(pList).Status=='D')
+        {
+            pList->Item.Status = 'R';
+            return 0;
+        }
+        pList=nextItem(pList);
+    }
+
+    return 1;
+}
+
+
+void updatelist(NodeItem ** head){
+    NodeItem * p,*q ;
+    p = *head;
+    q = NULL;
+    
 
     while (p!=NULL)
     {
-        currentItem = priorItem(headlist);
-        if (valueItem(currentItem).studied == 0) {
-            if (valueItem(currentItem).weight > 3 || valueItem(currentItem).wilaya!= 16) // CASE 01 : THE ITEM GOES TO VanQ
-            {
-                // add item to vanQ if possible
-
-            }else // CASE 02 : THE ITEM IS NOT FROM ALGIERS AND IT GOES TO VanQ{
-                {
-                     //TRY TO enqueue IN MOTOQ IF NOT POSSIBLE THEN GO TO VANQ
-                }
+        if (valueItem(p).Status=='D')
+        {
+           if (q == NULL)
+           {
+            *head = nextItem(p);
+           }
+           
         }
-        
+        q = p;
+        p =nextItem(p);
     }
     
 }
+
+
+
+
+
+
+
+        
+        
+        
+    
+    
+
 
 
