@@ -626,7 +626,30 @@ int setReturn(NodeItem * headlist, int ID){ // set the item to Returned if we tr
 }
 
 
-void updatelist(NodeItem ** head){
+void removeItemByadress(NodeItem ** head, NodeItem * p){
+    if (p == *head){
+        *head = nextItem(p);
+        free(p);
+
+    }else{
+        NodeItem* q  = * head;
+        while(q!= NULL){
+
+        if (nextItem(q) == p) {
+
+            ass_adrItem(q,nextItem(p));
+            free(p);
+            break;
+        }
+
+        q = nextItem(q);
+
+        }
+    }
+}
+
+
+void updateItemlist(NodeItem ** head){ // removes items with delivered status 
     NodeItem * p,*q ;
     p = *head;
     q = NULL;
@@ -636,19 +659,35 @@ void updatelist(NodeItem ** head){
     {
         if (valueItem(p).Status=='D')
         {
-           if (q == NULL)
-           {
-            *head = nextItem(p);
-           }
-           
+           removeItemByadress(head,p);
         }
-        q = p;
         p =nextItem(p);
     }
     
+
 }
 
 
+
+void updateQueuesAfterDelivery(queue *VanQ, queue * MotoQ){
+
+    Vehicle vehicle;
+
+    NodeQueue * pMoto= (*MotoQ).head;
+    NodeQueue * pVan= (*VanQ).head;
+    while (pMoto != NULL)
+    {
+        if (lengthofItemList(pMoto->head)>0)
+        {
+          dequeueVehicle(&MotoQ,&vehicle);
+          enqueueVehicle(&MotoQ,vehicle); 
+            
+        }
+        
+    }
+    
+    
+}
 
 
 

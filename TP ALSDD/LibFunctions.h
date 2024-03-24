@@ -37,6 +37,8 @@ int min_date(char *, char *);
 NodeItem *priorItem(NodeItem *);
 void assignItemsToVehicleQueue(NodeItem *, queue, queue);
 int setReturn(NodeItem *, int);
+void removeItemByadress(NodeItem **, NodeItem *);
+void updateItemlist(NodeItem **);
 
 // void assignItemsToVehicleQueue(NodeItem *, queue, queue);
 

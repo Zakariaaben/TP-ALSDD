@@ -81,11 +81,12 @@ mainmenu:
             clrscr();
             printItemList(ItemList);
             getchar();
-            system("cls");
+            
             }else {
                 printf("\n\t\t\t\t    * Please load the list from the file first * \n");
                 getchar();
             }
+            system("cls");
             goto sousmenu_1;
 
 
@@ -214,7 +215,7 @@ mainmenu:
                 printVehicleQueue(VanQ);
                 printf("\tMoto Queue : \n\n");
                 printVehicleQueue(MotoQ);
-                printf("Give the ID of the Item Returned (Based on the ID of an Item linked to the queues) :");
+          GiveID:printf("\nGive the ID of the Item Returned (Based on the ID of an Item linked to the queues) :");
                 int ID;
           readID:scanf( "%d", &ID );
 
@@ -223,8 +224,13 @@ mainmenu:
                     goto readID;
                 }
 
-                printf("\n\t\tItem Set to returned !");
-                getch();
+                printf("\n\t\tItem Set to returned ! \n ");
+                printf("Is there another returned  item ? (Y/N)\n");
+                char ans ;
+                ans= getch();
+                if (ans ==  'y' || ans == 'Y'){
+                    goto GiveID;
+                }
                 system("cls");
                 break;
 
@@ -233,8 +239,8 @@ mainmenu:
                 break;
             }
 
-            // updateItemlist(&ItemList);
-
+            updateItemlist(&ItemList);
+            
         }
         else {
             printf("\n\t\t\t\t    * Please load the queue from the list first * \n");
