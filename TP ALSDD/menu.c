@@ -1,10 +1,6 @@
 #include "menu.h"
-#include <windows.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <conio.h>
 #include "conio.c"
-#include "conio2.h"
+
 
 #define marginleft 30
 #define margintop 5
@@ -357,5 +353,52 @@ void menureturn(int *choix)
     {
         *choix = cpt;
     }
+}
+
+void animation(){
+    system("cls"); // Waiting screen
+            gotoxy(marginleft+5, 5);
+            printf("-----------------------------------------\n");
+            gotoxy(marginleft+5, 11);
+            printf("-----------------------------------------");
+            gotoxy(marginleft+5, 7);
+            printf("    Items Are being assigned");
+            Sleep(300);
+            printf(" .");
+            Sleep(300);
+            printf(" .");
+            Sleep(300);
+            printf(" .");
+            Sleep(300);
+            printf(" .");
+            Sleep(300);
+            printf(" .");
+            gotoxy(marginleft+5, 9);
+            printf("\tItems assigned Successfully !\n");
+            Sleep(1500);
+
+}
+void animation2(){
+            system("cls"); // Waiting screen
+            gotoxy(marginleft+5, 5);
+            printf("-----------------------------------------\n");
+            gotoxy(marginleft+5, 11);
+            printf("-----------------------------------------");
+            gotoxy(marginleft+5, 7);
+            printf("    Items Are being assigned");
+            Sleep(300);
+            printf(" .");
+            Sleep(300);
+            printf(" .");
+            Sleep(300);
+            printf(" .");
+            Sleep(300);
+            printf(" .");
+            Sleep(300);
+            printf(" .");
+            gotoxy(marginleft+1, 9);
+            printf(" * The is no availaible Vehicles Today Please comeback tomorrow * \n");
+            getch();
+
 }
 

@@ -1,10 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
-
 #include "LibFunctions.c"
 #include "menu.c"
 
-#include <stdbool.h>
+
 
 
 int main()
@@ -18,11 +17,13 @@ int main()
 
     NodeVehicle *VehicleList=NULL;
     NodeItem *ItemList=NULL;
-
+    
     queue VanQ;
     queue MotoQ;
 
 
+    report report ={.cancelledItems=0,.ItemsDelivered=0,.newItems=0,.returnedItems=0, .initialItemsNumber = 0, .finalItemsNumber=12};
+    report.finalItemsNumber = 12;
     //End of innitialisation part
 
 
@@ -44,11 +45,12 @@ mainmenu:
         case 1: // lOAD LISTS FROM FILE
             if ( listcreated == false)
                 {
+                
 
                 loadVehicleListFromfile(&VehicleList, "vehicles.txt");
 
                 loadItemListFromfile(&ItemList, "items.txt");
-
+                report.initialItemsNumber = lengthofItemList(ItemList);
                 printf("\n\t\tLists Loaded successfully from the file ! Press enter to go back to the previous menu.");
                 listcreated = true;
                 getchar();
@@ -65,10 +67,17 @@ mainmenu:
         case 2 :  // CREATE VANQ AND MOTOQ
 
             if (listcreated == true){
-                createQueuesFromList(VehicleList,&MotoQ,&VanQ);
-                printf("\n\t\t\t\t\t Queues Created Successfully");
-                queuecreated = true;
-                getchar();
+                
+                    if (queuecreated == false){
+                    createQueuesFromList(VehicleList,&MotoQ,&VanQ);
+                    printf("\n\t\t\t\t\t Queues Created Successfully");
+                    queuecreated = true;
+                    getchar();
+                    }
+                    else {
+                        printf("\n\t\t\t\t\tThe The Queues are already created !");
+                        getchar();  
+                    }
             } else {
                 printf("\n\t\t\t\t\t You have to load The lists Before ! ");
                 getchar();
@@ -80,10 +89,12 @@ mainmenu:
         if (listcreated == true){
             clrscr();
             printItemList(ItemList);
+            Sleep(1);
             getchar();
             
             }else {
                 printf("\n\t\t\t\t    * Please load the list from the file first * \n");
+                Sleep(1);
                 getchar();
             }
             system("cls");
@@ -104,8 +115,9 @@ mainmenu:
 
         case 5: // Add new Item
             if (listcreated == true){
+            report.newItems++;
             Item item ;
-            createItem(&item); // * a finir *
+            createItem(&item,ItemList); // * a finir *
             addNewItem(&ItemList,item);
             printf("\n\t\t\t\t\t\t    Item Added successfully\n");
             getchar();
@@ -119,7 +131,7 @@ mainmenu:
 
             if (queuecreated == true){
             Vehicle vehicle;
-            createVehicle(&vehicle);
+            createVehicle(&vehicle,VehicleList);
             addVehicleAndUpdateQueue(&VehicleList,vehicle, &MotoQ, &VanQ);
             printf("\n\t\t\t\t\t\t    Vehicle Added successfully\n");
             getchar();
@@ -182,64 +194,55 @@ mainmenu:
     case 2: // Assign items and launch Delivery
 
         if(queuecreated==true){
+            if (areItemsRemaining(ItemList)){
+                
 
-            system("cls"); // Waiting screen
-            gotoxy(marginleft+5, 5);
-            printf("-----------------------------------------\n");
-            gotoxy(marginleft+5, 11);
-            printf("-----------------------------------------");
-            gotoxy(marginleft+5, 7);
-            printf("    Items Are being assigned");
-            Sleep(300);
-            printf(" .");
-            Sleep(300);
-            printf(" .");
-            Sleep(300);
-            printf(" .");
-            Sleep(300);
-            printf(" .");
-            Sleep(300);
-            printf(" .");
-            assignItemsToVehicleQueue(ItemList,MotoQ,VanQ);
-            gotoxy(marginleft+5, 9);
-            printf("\tItems assigned Successfully !\n");
-            Sleep(1500);
-
-            menureturn(&choix);
-            system("cls");
-            switch (choix)
-            {
-
-            case 1:// Yes
-                printf("\tVan Queue : \n\n");
-                printVehicleQueue(VanQ);
-                printf("\tMoto Queue : \n\n");
-                printVehicleQueue(MotoQ);
-          GiveID:printf("\nGive the ID of the Item Returned (Based on the ID of an Item linked to the queues) :");
-                int ID;
-          readID:scanf( "%d", &ID );
-
-                if(setReturn(ItemList,ID)==1){
-                    printf("Invalid ID Please try again  : ");
-                    goto readID;
-                }
-
-                printf("\n\t\tItem Set to returned ! \n ");
-                printf("Is there another returned  item ? (Y/N)\n");
-                char ans ;
-                ans= getch();
-                if (ans ==  'y' || ans == 'Y'){
-                    goto GiveID;
-                }
+                if (assignItemsToVehicleQueue(ItemList,MotoQ,VanQ)==true){
+                animation();
+                menureturn(&choix);
                 system("cls");
-                break;
+                switch (choix)
+                {
+
+                case 1:// Yes
+                    printf("\tVan Queue : \n\n");
+                    printQueueContent(VanQ);
+                    printf("\tMoto Queue : \n\n");
+                    printQueueContent(MotoQ);
+            GiveID:printf("\nGive the ID of the Item Returned (Based on the ID of an Item linked to the queues) :");
+                    int ID;
+            readID:scanf( "%d", &ID );
+
+                    if(setReturn(ItemList,ID)==1){
+                        printf("Invalid ID Please try again  : ");
+                        goto readID;
+                    }
+                    report.returnedItems++;
+                    printf("\n\t\tItem Set to returned ! \n ");
+                    printf("Is there another returned  item ? (Y/N)\n");
+                    char ans ;
+                    ans= getch();
+                    if (ans ==  'y' || ans == 'Y'){
+                        goto GiveID;
+                    }
+                    system("cls");
+                    break;
 
 
-            case 2:// No
-                break;
+                case 2:// No
+                    break;
+                }
+
+                updateItemlist(&ItemList);
+                updateQueuesAfterDelivery(&VanQ,&MotoQ);
+                }
+                else{
+                    animation2();
+                }
+            }else{
+                printf("\n\t\t\t    * The is no Items Left To Deliver Please save and close * \n");
+                getchar();
             }
-
-            updateItemlist(&ItemList);
             
         }
         else {
@@ -248,6 +251,7 @@ mainmenu:
         }
     
     goto mainmenu;
+
     case 3: // set return and delivery cancellation ( delete Items from list )
         if (listcreated ==true)
         {
@@ -258,16 +262,30 @@ mainmenu:
             if (deleteItemByID(&ItemList,ID)==1){
                 printf("\n\t\tThis ID does not exist !");
             }
+            report.cancelledItems++;
             Sleep(1);
             getch();
         }else{
             printf("\n\t\t\t\t    * Please load the list from the file first * \n");
+            Sleep(1);
+            getch();
         }
+        goto mainmenu;
 
-
-            goto mainmenu;
     case 4: // simulate end of the day and Update files and create report file
-
+    
+    if (listcreated== true){
+        report.finalItemsNumber = lengthofItemList(ItemList); 
+        report.ItemsDelivered= report.initialItemsNumber + report.newItems-report.cancelledItems-report.finalItemsNumber;
+        createReportFile(report);
+        loadfilefromvehiclelist(VehicleList);
+        loadfilefromItemlist(ItemList);
+        getch();
+        }
+        else{
+            printf("\n\t\t\t\t    * Please load the list from the file first * \n");
+            getchar();
+        }
     goto mainmenu;
     case 5: // exit application
     system("cls");

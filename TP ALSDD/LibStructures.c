@@ -47,5 +47,15 @@ typedef struct queue{
 }queue;
 
 
+typedef struct report{
+    int initialItemsNumber;
+    int ItemsDelivered;
+    int returnedItems;
+    int newItems;
+    int cancelledItems;
+    int finalItemsNumber;
+    
+}report;
+
 
 

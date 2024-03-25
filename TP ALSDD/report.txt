@@ -1,0 +1,17 @@
+
+
+		_____________________________________________________________
+		|                                                           |
+		|   Initial Items number : 40 Item                          |
+		|                                                           |
+		|   New Items number : 00 Item                              |
+		|                                                           |
+		|   Total number of Delivered Items : 19 Item               |
+		|                                                           |
+		|   Total number of Returned Items : 00 Item                |
+		|                                                           |
+		|   Total number of cancelled Items : 00 Item               |
+		|                                                           |
+		|   Final number of Items in the List : 21 Item             |
+		|                                                           |
+		-------------------------------------------------------------
