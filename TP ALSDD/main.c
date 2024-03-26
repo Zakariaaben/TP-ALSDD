@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "LibFunctions.c"
-#include "menu.c"
-
-
+#include "./Libraries/LibFunctions.c"
+#include "./Libraries/menu.c"
 
 
 int main()
