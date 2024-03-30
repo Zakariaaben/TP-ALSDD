@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include "LibFunctions.h"
 #include <string.h>
+#include <conio.h>
+#include <windows.h>
 
 
 //----------------------------------------------------- PART FUNCTIONS OF ITEMS --------------------------------
@@ -35,7 +37,7 @@ Item valueItem(NodeItem *p)
     return p->Item;
 }
 
-bool ItemIdexists(NodeItem * head, int ID){
+bool ItemIdexists(NodeItem * head, int ID){ // verifies if The ID of the Item is in the Item list
     NodeItem * p = head;
     while (p!=NULL)
     {
@@ -50,7 +52,7 @@ bool ItemIdexists(NodeItem * head, int ID){
 }
 
 
-void createItem(Item * item,NodeItem * ItemList){
+void createItem(Item * item,NodeItem * ItemList){ // creates a new Item
     printf("\n\t - Insert the Item ID: ");
     scanf("%d",&(*item).ID);
     while (ItemIdexists(ItemList,(*item).ID)==true)
@@ -81,7 +83,7 @@ wilaya:printf("\n\t - Insert the wilaya  {1..58}: ");
 
 
 
-void addNewItem(NodeItem **head, Item Item)
+void addNewItem(NodeItem **head, Item Item) // adds the Item to the End of the ItemList
 {
     if (*head == NULL)
     {
@@ -107,7 +109,7 @@ void addNewItem(NodeItem **head, Item Item)
 }
 
 
-void printItem(Item item){
+void printItem(Item item){  // Prints one Item
             printf("\t\t\t- ID: %d\n", item.ID);
             printf("\t\t\t- Date: %s\n", item.Date);
             printf("\t\t\t- Wilaya: %d\n", item.wilaya);
@@ -118,7 +120,7 @@ void printItem(Item item){
 
 
 
-void printItemList(NodeItem *head)
+void printItemList(NodeItem *head) // Prints the whole Item List
 {
     if (head == NULL)
     {
@@ -142,7 +144,7 @@ void printItemList(NodeItem *head)
 
 
 
-int deleteItemByID(NodeItem **head, int ID)
+int deleteItemByID(NodeItem **head, int ID) // Deletes an Item from the Item list by his ID
 {
     if (*head == NULL)
     {
@@ -184,7 +186,9 @@ int deleteItemByID(NodeItem **head, int ID)
 }
 
 
-int lengthofItemList(NodeItem *head)
+
+
+int lengthofItemList(NodeItem *head) // returns the Number of Items in the Item List
 {
     if (head == NULL)
     {
@@ -204,7 +208,7 @@ int lengthofItemList(NodeItem *head)
 }
 
 
-void loadItemListFromfile(NodeItem **head, char *filename)
+void loadItemListFromfile(NodeItem **head, char *filename) // Loads the Item List
 {
     *head = NULL;
     char line[100]; // ceci contiendra chaque ligne
@@ -224,7 +228,7 @@ void loadItemListFromfile(NodeItem **head, char *filename)
     fclose(file); // closing the file
 }
 
-void loadfilefromItemlist(NodeItem *head)
+void loadfilefromItemlist(NodeItem *head) // Creates the End of the day Item new List
 {
     FILE *file;
     file = fopen("./Reports/ItemReport.txt", "w"); // Open the file for writing
@@ -280,7 +284,7 @@ Vehicle valueVehicle(NodeVehicle *p)
 }
 
 
-bool VehicleIdexists(NodeVehicle * head, int ID){
+bool VehicleIdexists(NodeVehicle * head, int ID){ // verifies if the vehicle exists
     NodeVehicle * p = head;
     while (p!=NULL)
     {
@@ -296,7 +300,7 @@ bool VehicleIdexists(NodeVehicle * head, int ID){
 
 
 
-void createVehicle(Vehicle * vehicle,NodeVehicle * VehicleList){
+void createVehicle(Vehicle * vehicle,NodeVehicle * VehicleList){ // creates a new Vehicle
    
 type:printf("\n\tGive the type of the Vehicle (M for Moto and V for Van) :  ");
     scanf("%c", &(*vehicle).Type);
@@ -324,7 +328,7 @@ maxcap:printf("\n\tGive the Maximum capacity of the Vehicle ( <=2 For Moto) :  "
     
 }
 
-void addNewVehicle(NodeVehicle **head, Vehicle Vehicle)
+void addNewVehicle(NodeVehicle **head, Vehicle Vehicle) // adds the vehicle to the list
 {
     if (*head == NULL)
     {
@@ -348,6 +352,7 @@ void addNewVehicle(NodeVehicle **head, Vehicle Vehicle)
         ass_valVehicle(ptr, Vehicle);
     }
 }
+
 
 int deleteVehicleByID(NodeVehicle **head, int ID)
 {
@@ -390,11 +395,16 @@ int deleteVehicleByID(NodeVehicle **head, int ID)
     }
 }
 
+
+
 void printVehicle(Vehicle vehicle){
     printf("\t- Type: %c\n", vehicle.Type);
     printf("\t- ID: %d\n", vehicle.ID);
     printf("\t- Max Capacity: %d\n", vehicle.capacity);
 }
+
+
+
 void printVehicleList(NodeVehicle *head)
 {
     if (head == NULL)
@@ -418,6 +428,8 @@ void printVehicleList(NodeVehicle *head)
     }
 }
 
+
+
 void loadVehicleListFromfile(NodeVehicle **head, char *filename)
 {
     char line[100]; // ceci contiendra chaque ligne
@@ -436,7 +448,9 @@ void loadVehicleListFromfile(NodeVehicle **head, char *filename)
     fclose(file); // closing the file
 }
 
-void loadfilefromvehiclelist(NodeVehicle *head)
+
+
+void loadfilefromvehiclelist(NodeVehicle *head) // creates the end of the day Vehicle File
 {
     FILE *file;
     file = fopen("./Reports/VehicleReport.txt", "w"); // Open the file for writing
@@ -492,7 +506,7 @@ Vehicle valueVQueue(NodeQueue *p) // renvoie la valeur du vehicule du maillon
 
 // ---------------------------------- LOAD MOTO/VAN QUEUE FROM VEHICLE LIST ---------------------------------
 
-void enqueueVehicle(queue *queue, NodeQueue * newNode)
+void enqueueVehicle(queue *queue, NodeQueue * newNode) // adds a node at the end of the queue
 {
     newNode->head = NULL;
     (*newNode).head = NULL;
@@ -513,7 +527,7 @@ void enqueueVehicle(queue *queue, NodeQueue * newNode)
 
 
 
-NodeQueue * dequeueVehicle(queue *queue)
+NodeQueue * dequeueVehicle(queue *queue) 
 {
     if ((*queue).head == NULL)
     {
@@ -536,7 +550,7 @@ NodeQueue * dequeueVehicle(queue *queue)
     }
 }
 
-void printVehicleQueue(queue queue)
+void printVehicleQueue(queue queue) // prints the vehicles of the queue
 {
     if (queue.head == NULL)
     {
@@ -562,7 +576,7 @@ void printVehicleQueue(queue queue)
 }
 
 
-void printQueueContent(queue queue){
+void printQueueContent(queue queue){ // prints the vehicle  of the queue containing at least one item
     if (queue.head == NULL)
     {
         printf("\n\t/* La Queue de ces vehicule est vide */\n");
@@ -620,7 +634,7 @@ void createQueuesFromList(NodeVehicle *headList, queue *MotoQ, queue *VanQ)
 }
 
 
-void addVehicleAndUpdateQueue(NodeVehicle **head, Vehicle vehicle, queue *MotoQ, queue *VanQ)
+void addVehicleAndUpdateQueue(NodeVehicle **head, Vehicle vehicle, queue *MotoQ, queue *VanQ) // Updates the vehicle queue and the vehicle list at the same time
 {
     addNewVehicle(head, vehicle);
     NodeQueue* NewNode;
@@ -641,7 +655,7 @@ void addVehicleAndUpdateQueue(NodeVehicle **head, Vehicle vehicle, queue *MotoQ,
 
 // ------------------------ FUNCTIONS OF PART OF ASSIGNING ITEMS TO VEHICLES ---------------------------------
 
-int min_date(char *date1, char *date2)
+int min_date(char *date1, char *date2) // returns the minimum date between two dates 
 {
     // Compare year
     if (strncmp(date1 + 6, date2 + 6, 2) < 0)
@@ -680,7 +694,7 @@ NodeItem *priorItem(NodeItem *headlist) // Fetches the pointer of the item havin
     if (headlist == NULL)
         printf("LA LISTE EST VIDE");
     NodeItem *p = headlist;
-    char *mindate = "99-99-99";
+    char *mindate = "99-99-99"; // initialises the date at the highest date possible
     NodeItem *q=NULL;
     while (p != NULL)
     {
@@ -700,7 +714,8 @@ NodeItem *priorItem(NodeItem *headlist) // Fetches the pointer of the item havin
 }
 
 
-bool assignItemsToVehicleQueue(NodeItem *headlist, queue MotoQ, queue VanQ)
+bool assignItemsToVehicleQueue(NodeItem *headlist, queue MotoQ, queue VanQ) // this is the main function of the program :
+//  IT assigns each Item of the Item list to the corresponding vehicle 
 {
     bool isThereAssignedItem= false;
     NodeItem *currentItem = priorItem(headlist);
@@ -799,7 +814,7 @@ int setReturn(NodeItem * headlist, int ID){ // set the item to Returned if we tr
 }
 
 
-void removeItemByadress(NodeItem ** head, NodeItem * p){
+void removeItemByadress(NodeItem ** head, NodeItem * p){ // It removes the Item according to  a pointer of the node It is used in the updateItemList Function
     if (p == *head){
         *head = nextItem(p);
         free(p);
@@ -823,7 +838,7 @@ void removeItemByadress(NodeItem ** head, NodeItem * p){
 
 
 
-void updateItemlist(NodeItem ** head){ // removes items with delivered status 
+void updateItemlist(NodeItem ** head){ // removes items with delivered status after finishing assigning thet Items to the vehicle
     NodeItem * p,*q ;
     p = *head;
     q = NULL;
@@ -845,7 +860,7 @@ void updateItemlist(NodeItem ** head){ // removes items with delivered status
 
 
 
-void createReportFile(report report) {
+void createReportFile(report report) { // creates a report file at the end of the program
     // Open the file in write mode
     FILE *file = fopen("./Reports/report.txt", "w");
 
@@ -882,7 +897,7 @@ void createReportFile(report report) {
         
         
         
-    void updateQueuesAfterDelivery(queue *VanQ, queue * MotoQ){ // Resets the item list of the queues and increments th trips
+void updateQueuesAfterDelivery(queue *VanQ, queue * MotoQ){ // Resets the item list of the queues and increments the trips
 
     Vehicle vehicle;
 
@@ -920,7 +935,8 @@ void createReportFile(report report) {
     
 }
 
-bool areItemsRemaining(NodeItem* ItemList){
+
+bool areItemsRemaining(NodeItem* ItemList){ // verifies if there is still Items to deliver
     NodeItem * p = ItemList;
     while (p!= NULL)
     {
@@ -935,6 +951,69 @@ bool areItemsRemaining(NodeItem* ItemList){
 }
 
     
+ 
+void page_acceuil() { // Function of the initial Display of the Program 
+    system("Cls"); // Effacer l'ecran
+    int k ;
+    for (k = 0 ; k<10 ; k++ ) {  // Afficher 10 fois le logo de ESI
+        if (k % 2 == 0) // Les iterations paires s'afficherent en vert
+        system("color 0A");
+        if (k % 2 == 1) // Les iterations impaires s'afficherent en cian
+        system("color 0B");
+
+        printf("\n\n\n\n\n\n"); // imprimer le logo de ESI
+        printf(
+            "\t\t\t\t                                              iiii\n"
+            "\t\t\t\t                                             i::::i\n"
+            "\t\t\t\t                                              iiii\n\n"
+            "\t\t\t\t        eeeeeeeeeeee          ssssssssss    iiiiiii\n"
+            "\t\t\t\t      ee::::::::::::ee      ss::::::::::s   i:::::i\n"
+            "\t\t\t\t     e::::::eeeee:::::ee  ss:::::::::::::s   i::::i\n"
+            "\t\t\t\t    e::::::e     e:::::e  s::::::ssss:::::s  i::::i\n"
+            "\t\t\t\t    e:::::::eeeee::::::e   s:::::s  ssssss   i::::i\n"
+            "\t\t\t\t    e:::::::::::::::::e      s::::::s        i::::i\n"
+            "\t\t\t\t    e::::::eeeeeeeeeee          s::::::s     i::::i\n"
+            "\t\t\t\t    e:::::::e             ssssss   s:::::s   i::::i\n"
+            "\t\t\t\t    e::::::::e            s:::::ssss::::::s i::::::i\n"
+            "\t\t\t\t     e::::::::eeeeeeee    s::::::::::::::s  i::::::i\n"
+            "\t\t\t\t      ee:::::::::::::e     s:::::::::::ss   i::::::i\n"
+            "\t\t\t\t        eeeeeeeeeeeeee      sssssssssss     iiiiiiii\n"
+        );
+
+        Sleep(200);     // Attendre 200 ms (0,2 s) a chaque iteration
+        system("cls");
+    }
+
+    system("cls");  // effacer l'ecran
+    printf("\n\t\t\t\033[96m           R%cpublique Alg%crienne D%cmocratique et Populaire           \033[0m\n", 130, 130, 130);
+    printf("\t\t\t\033[96m  Minist%cre de l'Enseignement Sup%crieur et de la Recherche Scientifique\033[0m\n", 130, 130);
+    printf("\t\t\t      \033[96m _______________________________________________________\n");
+    printf("\t\t\t      \033[96m|        \033[92m_______\033[0m    \033[91m _______\033[0m    \033[97m _\033[0m                      \033[96m|\n");
+    printf("\t\t\t      \033[96m|       \033[92m|  _____|\033[0m   \033[91m|  _____|\033[0m   \033[97m| |\033[0m  \033[92m%ccole nationale\033[0m    \033[96m|\n", 130);
+    printf("\t\t\t      \033[96m|       \033[92m| |_____\033[0m    \033[91m| |_____\033[0m    \033[97m| |\033[0m                     \033[96m|\n");
+    printf("\t\t\t      \033[96m|       \033[92m|  _____|\033[0m   \033[91m|_____  |\033[0m   \033[97m| |\033[0m  \033[91msup%crieure\033[0m         \033[96m|\n", 130);
+    printf("\t\t\t      \033[96m|       \033[92m| |_____\033[0m    \033[91m _____| |\033[0m   \033[97m| |\033[0m                     \033[96m|\n");
+    printf("\t\t\t      \033[96m|       \033[92m|_______|\033[0m   \033[91m|_______|\033[0m   \033[97m|_|\033[0m  \033[97md'informatique\033[0m     \033[96m|\n");
+    printf("\t\t\t      \033[96m|_______________________________________________________|\033[0m\n\n");
+
+    printf("\t\t\t\t\033[96m  CPI - 1%cre Ann%ce - Ann%ce Universitaire 2022/2023 \n", 138, 130, 130);
+    printf("\t\t\t\033[96m ___________________________________________________________________\n");
+    printf("\t\t\t\033[96m|                                                                   |\n");
+    printf("\t\t\t\033[96m|          REALISED BY:  \033[97mZakaria Benhamiche\033[96m                         |\n");
+    printf("\t\t\t\033[96m|                                                                   |\n");
+    printf("\t\t\t\033[96m|                                                                   |\n");
+    printf("\t\t\t\033[96m|               SECTION :  \033[97mB\033[96m          GROUP: \033[97m06\033[96m                     |\n");
+    printf("\t\t\t\033[96m|                                                                   |\n");
+    printf("\t\t\t\033[96m|             TP1 :  \033[97mLes listes lin%caires chain%ces\033[96m                  |\n", 130, 130);
+    printf("\t\t\t\033[96m|                                                                   |\n");
+    printf("\t\t\t\033[96m|              <  \033[97mLogiciel de gestion de Livraison\033[96m >                |\n");
+    printf("\t\t\t\033[96m|___________________________________________________________________|\n\n\n");
 
 
+    printf("\t\t\t                            \033[91mS'il vous plait                                 \n");
+    printf("\t\t\t          Appuyez sur n'importe quelle touche pour continuer...\033[0m               ");
+    getch();
+
+    system("cls");
+}
 

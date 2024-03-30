@@ -1,6 +1,15 @@
-#include "menu.h"
 #include "conio.c"
 
+void hide_cursor();
+void bleu();
+void noire();
+void blanc();
+void cyan();
+void hmer();
+void sfer();
+void menuprinci(int *);
+void menulistmanagement(int *);
+void menureturn(int *);
 
 #define marginleft 30
 #define margintop 5

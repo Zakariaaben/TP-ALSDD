@@ -14,6 +14,7 @@ void printItemList(NodeItem *);
 int deleteItemByID(NodeItem **, int);
 int lengthofItemList(NodeItem *);
 void loadItemListFromfile(NodeItem **, char *);
+void loadfilefromItemlist(NodeItem *);
 void allocateVehicle(NodeVehicle **);
 NodeVehicle *nextVehicle(NodeVehicle *);
 void ass_adrVehicle(NodeVehicle *, NodeVehicle *);
@@ -26,6 +27,7 @@ int deleteVehicleByID(NodeVehicle **, int);
 void printVehicle(Vehicle);
 void printVehicleList(NodeVehicle *);
 void loadVehicleListFromfile(NodeVehicle **, char *);
+void loadfilefromvehiclelist(NodeVehicle *);
 void allocateVQueue(NodeQueue **);
 NodeQueue *nextVQueue(NodeQueue *);
 void ass_adrVQueue(NodeQueue *, NodeQueue *);
@@ -34,6 +36,7 @@ Vehicle valueVQueue(NodeQueue *);
 void enqueueVehicle(queue *, NodeQueue *);
 NodeQueue * dequeueVehicle(queue *);
 void printVehicleQueue(queue);
+void printQueueContent(queue);
 void createQueuesFromList(NodeVehicle *, queue *, queue *);
 void addVehicleAndUpdateQueue(NodeVehicle **, Vehicle, queue *, queue *);
 int min_date(char *, char *);
@@ -45,7 +48,6 @@ void updateItemlist(NodeItem **);
 void createReportFile(report);
 void updateQueuesAfterDelivery(queue *, queue *);
 bool areItemsRemaining(NodeItem *);
-
-// void assignItemsToVehicleQueue(NodeItem *, queue, queue);
+void page_acceuil();
 
 #endif //LIBFUNCTIONS_H

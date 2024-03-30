@@ -6,6 +6,8 @@
 
 int main()
 {
+    hide_cursor();
+    page_acceuil();
 
 
     // Initialistion part
@@ -21,14 +23,13 @@ int main()
 
 
     report report ={.cancelledItems=0,.ItemsDelivered=0,.newItems=0,.returnedItems=0, .initialItemsNumber = 0, .finalItemsNumber=12};
-    report.finalItemsNumber = 12;
     //End of innitialisation part
 
 
 
     int choix;
     choix = 0;
-    hide_cursor();
+    
 mainmenu:
     menuprinci(&choix);
 
@@ -73,7 +74,7 @@ mainmenu:
                     getchar();
                     }
                     else {
-                        printf("\n\t\t\t\t\tThe The Queues are already created !");
+                        printf("\n\t\t\t\t\t    The Queues are already created !");
                         getchar();  
                     }
             } else {
@@ -238,7 +239,7 @@ mainmenu:
                     animation2();
                 }
             }else{
-                printf("\n\t\t\t    * The is no Items Left To Deliver Please save and close * \n");
+                printf("\n\t\t\t    * There is no Items Left To Deliver Please save and close * \n");
                 getchar();
             }
             
