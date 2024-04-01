@@ -996,7 +996,7 @@ void page_acceuil() { // Function of the initial Display of the Program
     printf("\t\t\t      \033[96m|       \033[92m|_______|\033[0m   \033[91m|_______|\033[0m   \033[97m|_|\033[0m  \033[97md'informatique\033[0m     \033[96m|\n");
     printf("\t\t\t      \033[96m|_______________________________________________________|\033[0m\n\n");
 
-    printf("\t\t\t\t\033[96m  CPI - 1%cre Ann%ce - Ann%ce Universitaire 2022/2023 \n", 138, 130, 130);
+    printf("\t\t\t\t\033[96m  CPI - 1%cre Ann%ce - Ann%ce Universitaire 2023/2024 \n", 138, 130, 130);
     printf("\t\t\t\033[96m ___________________________________________________________________\n");
     printf("\t\t\t\033[96m|                                                                   |\n");
     printf("\t\t\t\033[96m|          REALISED BY:  \033[97mZakaria Benhamiche  && Bouba Yacin\033[96m         |\n");
