@@ -289,6 +289,7 @@ mainmenu:
     case 5: // exit application
     system("cls");
     printf("See you soon\n");
+    getch();
     }
 }
 
